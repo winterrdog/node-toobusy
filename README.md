@@ -7,7 +7,7 @@ This package is a simpler install without native dependencies, but requires node
 
 ## Original node-toobusy docs
 
-[![Build Status](https://secure.travis-ci.org/strml/node-toobusy.png)](http://travis-ci.org/strml/node-toobusy)
+[![Build Status](https://secure.travis-ci.org/STRML/node-toobusy.png)](http://travis-ci.org/STRML/node-toobusy)
 
 What happens when your service is overwhelmed with traffic?
 Your server can do one of two things:
