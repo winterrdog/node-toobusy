@@ -1,7 +1,7 @@
 {
-  "name": "toobusy",
-  "description": "Don't fall over when your Node.JS server is too busy.",
-  "homepage": "https://github.com/lloyd/node-toobusy",
+  "name": "toobusy-js",
+  "description": "Don't fall over when your Node.JS server is too busy. Now without native dependencies!",
+  "homepage": "https://github.com/STRML/node-toobusy",
   "version": "0.3.0",
   "dependencies": {
   },
@@ -11,12 +11,12 @@
   },
   "maintainers": [
     {
-      "name": "Lloyd Hilaiel",
-      "email": "lloyd@hilaiel.com"
+      "name": "Samuel Reed",
+      "email": "sam@tixelated.com"
     }
   ],
   "bugs": {
-    "url": "https://github.com/lloyd/node-toobusy/issues"
+    "url": "https://github.com/STRML/node-toobusy/issues"
   },
   "licenses": [
     {
@@ -26,7 +26,7 @@
   "repositories": [
     {
       "type": "git",
-      "url": "git://github.com/lloyd/node-toobusy.git"
+      "url": "git://github.com/STRML/node-toobusy.git"
     }
   ],
   "main": "./index.js",
