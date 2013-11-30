@@ -1,6 +1,15 @@
 # Is Your Node Process Too Busy?
 
-[![Build Status](https://secure.travis-ci.org/lloyd/node-toobusy.png)](http://travis-ci.org/lloyd/node-toobusy)
+## What is this fork?
+
+`toobusy-js` is a fork of lloy'ds [node-toobusy](http://github.com/lloyd/node-toobusy) that removes native dependencies
+in favor of using the `unref` introduced in [node 0.9.1](http://blog.nodejs.org/2012/08/28/node-v0-9-1-unstable/).
+
+This package is a simpler install without native dependencies, but requires node >= 0.9.1.
+
+## Original node-toobusy docs
+
+[![Build Status](https://secure.travis-ci.org/strml/node-toobusy.png)](http://travis-ci.org/strml/node-toobusy)
 
 What happens when your service is overwhelmed with traffic?
 Your server can do one of two things:
