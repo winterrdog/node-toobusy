@@ -31,14 +31,14 @@ and continue serving as many requests as possible.
 ## installation
 
 ```
-npm install toobusy
+npm install toobusy-js
 ```
 
 
 ## usage
 
 ```javascript
-var toobusy = require('toobusy'),
+var toobusy = require('toobusy-js'),
     express = require('express');
     
 var app = express();
@@ -77,7 +77,7 @@ before we consider the process *too busy*.
 
 ```javascript
 // set maximum lag to an aggressive value
-require('toobusy').maxLag(10);
+require('toobusy-js').maxLag(10);
 ```
 
 The default value is 70ms,
