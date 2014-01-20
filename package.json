@@ -23,7 +23,7 @@
       "type": "WTFPL"
     }
   ],
-  "repositories": [
+  "repository": [
     {
       "type": "git",
       "url": "git://github.com/STRML/node-toobusy.git"
