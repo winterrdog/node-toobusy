@@ -1,4 +1,5 @@
 var setInterval = require("timers").setInterval;
+var clearInterval = require("timers").clearInterval;
 
 var STANDARD_HIGHWATER = 70;
 var STANDARD_INTERVAL = 500;
