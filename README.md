@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/STRML/node-toobusy.png)](http://travis-ci.org/STRML/node-toobusy)
+
 # Is Your Node Process Too Busy?
 
 `toobusy-js` is a fork of lloyd's [node-toobusy](http://github.com/lloyd/node-toobusy) that removes native dependencies
@@ -5,9 +7,7 @@ in favor of using the `unref` introduced in [node 0.9.1](http://blog.nodejs.org/
 
 This package is a simpler install without native dependencies, but requires node >= 0.9.1.
 
-## Original node-toobusy docs
-
-[![Build Status](https://secure.travis-ci.org/STRML/node-toobusy.png)](http://travis-ci.org/STRML/node-toobusy)
+## Node-Toobusy
 
 What happens when your service is overwhelmed with traffic?
 Your server can do one of two things:
@@ -76,15 +76,23 @@ This number represents the maximum amount of time in milliseconds that the event
 before we consider the process *too busy*.
 
 ```javascript
-// set maximum lag to an aggressive value
 var toobusy = require('toobusy-js');
+
+// Set maximum lag to an aggressive value.
 toobusy.maxLag(10);
+
+// Set check interval to a faster value. This will catch more latency spikes
+// but may cause the check to be too sensitive.
+toobusy.interval(250);
+
+// Get current maxLag or interval setting by calling without parameters.
+var currentMaxLag = toobusy.maxLag(), interval = toobusy.interval();
 ```
 
-The default value is 70ms,
-which allows an "average" server to run at 90-100% CPU
+The default maxLag value is 70ms, and the default check interval is 500ms.
+This allows an "average" server to run at 90-100% CPU
 and keeps request latency at around 200ms.
-For comparison, a value of 10ms results in 60-70% CPU usage,
+For comparison, a maxLag value of 10ms results in 60-70% CPU usage,
 while latency for "average" requests stays at about 40ms.
 
 These numbers are only examples,
