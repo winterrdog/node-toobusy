@@ -3,11 +3,11 @@
   "description": "Don't fall over when your Node.JS server is too busy. Now without native dependencies!",
   "homepage": "https://github.com/STRML/node-toobusy",
   "version": "0.3.1",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
-    "should": "1.2.1",
-    "mocha": "1.7.0"
+    "mocha": "1.7.0",
+    "pre-commit": "^1.0.5",
+    "should": "1.2.1"
   },
   "maintainers": [
     {
