@@ -12,6 +12,9 @@ describe('the library', function() {
     (toobusy.shutdown).should.be.a('function');
     (toobusy).should.not.have.property('start');
   });
+  it('should start automatically', function() {
+    (toobusy.started()).should.equal(true);
+  });
 });
 
 describe('maxLag', function() {

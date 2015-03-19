@@ -96,6 +96,10 @@ toobusy.shutdown = function(){
   clearInterval(checkInterval);
 };
 
+toobusy.started = function() {
+  return !!checkInterval;
+};
+
 /**
  * Private - starts checking lag.
  */
