@@ -2,7 +2,7 @@
 
 //
 // Constants
-// 
+//
 var STANDARD_HIGHWATER = 70;
 var STANDARD_INTERVAL = 500;
 
@@ -11,7 +11,7 @@ var STANDARD_INTERVAL = 500;
 // to smooth spikes.
 var AVG_DECAY_FACTOR = 3;
 
-// 
+//
 // Vars
 //
 
@@ -63,7 +63,7 @@ toobusy.lag = function(){
 };
 
 /**
- * Set or get the current max latency threshold. Default is 70ms. 
+ * Set or get the current max latency threshold. Default is 70ms.
  *
  * Note that if event loop lag goes over this threshold, the process is not always 'too busy' - the farther
  * it goes over the threshold, the more likely the process will be considered too busy.
@@ -112,5 +112,8 @@ function start() {
   // Don't keep process open just for this timer.
   checkInterval.unref();
 }
+
+// Kickoff the checking!
+start();
 
 module.exports = toobusy;
