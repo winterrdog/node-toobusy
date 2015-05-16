@@ -21,8 +21,11 @@ describe('maxLag', function() {
   it('should default to 70', function() {
     (toobusy.maxLag()).should.equal(70);
   });
+  it('should throw an exception for non-numbers', function() {
+    (function() { toobusy.maxLag('derp'); }).should.throw(/must be a number/);
+  });
   it('should throw an exception for values < 10', function() {
-    (function() { toobusy.maxLag(9); }).should.throw;
+    (function() { toobusy.maxLag(9); }).should.throw(/should be greater than 10/);
   });
   it('should be configurable', function() {
     (toobusy.maxLag(50)).should.equal(50);
@@ -36,7 +39,7 @@ describe('interval', function() {
     (toobusy.interval()).should.equal(500);
   });
   it('should throw an exception for values < 16', function() {
-    (function() { toobusy.interval(15); }).should.throw;
+    (function() { toobusy.interval(15); }).should.throw(/Interval/);
   });
   it('should be configurable', function() {
     (toobusy.interval(250)).should.equal(250);
