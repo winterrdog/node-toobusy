@@ -15,7 +15,7 @@ var AVG_DECAY_FACTOR = 3;
 // Vars
 //
 
-var lastTime = new Date().valueOf();
+var lastTime = Date.now();
 var highWater = STANDARD_HIGHWATER;
 var interval = STANDARD_INTERVAL;
 var currentLag = 0;
