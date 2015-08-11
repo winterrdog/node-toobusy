@@ -151,3 +151,12 @@ describe('smoothingFactor', function() {
   });
 });
 
+describe('started', function() {
+  it('should return false after shutdown', function(done) {
+    toobusy.shutdown();
+    (toobusy.started()).should.equal(false);
+    done();
+  });
+});
+
+
