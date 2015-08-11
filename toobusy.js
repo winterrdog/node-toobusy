@@ -9,7 +9,8 @@ var STANDARD_INTERVAL = 500;
 // A dampening factor.  When determining average calls per second or
 // current lag, we weigh the current value against the previous value 2:1
 // to smooth spikes.
-var AVG_DECAY_FACTOR = 3;
+// See https://en.wikipedia.org/wiki/Exponential_smoothing
+var SMOOTHING_FACTOR = 1/3;
 
 //
 // Vars
@@ -18,6 +19,7 @@ var AVG_DECAY_FACTOR = 3;
 var lastTime = Date.now();
 var highWater = STANDARD_HIGHWATER;
 var interval = STANDARD_INTERVAL;
+var smoothingFactor = SMOOTHING_FACTOR;
 var currentLag = 0;
 var checkInterval;
 
@@ -86,6 +88,25 @@ toobusy.maxLag = function(newLag){
 };
 
 /**
+ * Set or get the smoothing factor. Default is 0.3333....
+ *
+ * The smoothing factor per the standard exponential smoothing formula "αtn + (1-α)tn-1"
+ * See: https://en.wikipedia.org/wiki/Exponential_smoothing
+ *
+ * @param  {Number} [newFactor] New smoothing factor.
+ * @return {Number}             New or existing smoothing factor.
+ */
+toobusy.smoothingFactor = function(newFactor){
+  if(!newFactor) return smoothingFactor;
+
+  if (typeof newFactor !== "number") throw new Error("NewFactor must be a number.");
+  if(newFactor <= 0 || newFactor > 1) throw new Error("Smoothing factor should be in range ]0,1].");
+
+  smoothingFactor = newFactor;
+  return smoothingFactor;
+};
+
+/**
  * Shuts down toobusy.
  *
  * Not necessary to call this manually, only do this if you know what you're doing. `unref()` is called
@@ -93,7 +114,7 @@ toobusy.maxLag = function(newLag){
  */
 toobusy.shutdown = function(){
   currentLag = 0;
-  clearInterval(checkInterval);
+  checkInterval = clearInterval(checkInterval);
 };
 
 toobusy.started = function() {
@@ -108,8 +129,8 @@ function start() {
     var now = Date.now();
     var lag = now - lastTime;
     lag = Math.max(0, lag - interval);
-    // Dampen lag. See AVG_DECAY_FACTOR initialization at the top of this file.
-    currentLag = (lag + (currentLag * (AVG_DECAY_FACTOR - 1))) / AVG_DECAY_FACTOR;
+    // Dampen lag. See SMOOTHING_FACTOR initialization at the top of this file.
+    currentLag = smoothingFactor * lag + (1 - smoothingFactor) * currentLag;
     lastTime = now;
   }, interval);
 
