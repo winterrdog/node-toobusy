@@ -2,6 +2,13 @@
 var should = require('should');
 var toobusy = require('./');
 
+function tightWork(duration) {
+  var start = new Date();
+  while ((new Date() - start) < duration) {
+    for (var i = 0; i < 1e5;) i++;
+  }
+}
+
 /*global describe, it, beforeEach, afterEach */
 describe('the library', function() {
   it('should export a couple functions', function() {
@@ -63,10 +70,7 @@ describe('toobusy()', function() {
   it('should return true after a little load', function(done) {
     function load() {
       if (toobusy()) return done();
-      var start = new Date();
-      while ((new Date() - start) < 100) {
-        for (var i = 0; i < 1e5;) i++;
-      }
+      tightWork(100);
       setTimeout(load, 0);
     }
     load();
@@ -80,12 +84,69 @@ describe('toobusy()', function() {
         lag.should.be.above(1);
         return done();
       }
-      var start = new Date();
-      while ((new Date() - start) < 100) {
-        for (var i = 0; i < 1e5;) i++;
-      }
+      tightWork(100);
       setTimeout(load, 0);
     }
+    load();
+  });
+});
+
+describe('smoothingFactor', function() {
+  beforeEach(function() {
+    toobusy.maxLag(10);
+    toobusy.interval(250);
+  });
+  afterEach(function() {
+    toobusy.maxLag(70);
+    toobusy.interval(500);
+  });
+  it('should default to 1/3', function(done) {
+    (toobusy.smoothingFactor()).should.equal(1/3);
+    done();
+  });
+  it('should throw an exception for invalid values', function(done) {
+    (function() { toobusy.smoothingFactor(0); }).should.throw;
+    (function() { toobusy.smoothingFactor(2); }).should.throw;
+    (function() { toobusy.smoothingFactor(-1); }).should.throw;
+    (function() { toobusy.smoothingFactor(1); }).should.not.throw;
+    done();
+  });
+  it('should be configurable', function(done) {
+    (toobusy.smoothingFactor(0.9)).should.equal(0.9);
+    (toobusy.smoothingFactor(0.1)).should.equal(0.1);
+    (toobusy.smoothingFactor()).should.equal(0.1);
+    done();
+  });
+  it('should allow no dampening', function(done) {
+    var cycles_to_toobusy = 0;
+    toobusy.smoothingFactor(1); // no dampening
+
+    function load() {
+      if (toobusy()) {
+        (cycles_to_toobusy).should.equal(3);
+        return done();
+      }
+      cycles_to_toobusy++;
+      tightWork(100); // in 3 ticks, will overshoot by ~50ms, above 2*10ms
+      setTimeout(load, 0);
+    }
+
+    load();
+  });
+  it('should respect larger dampening factors', function(done) {
+    var cycles_to_toobusy = 0;
+    toobusy.smoothingFactor(0.05);
+
+    function load() {
+      if (toobusy()) {
+        (cycles_to_toobusy).should.be.above(3);
+        return done();
+      }
+      cycles_to_toobusy++;
+      tightWork(100);
+      setTimeout(load, 0);
+    }
+
     load();
   });
 });
