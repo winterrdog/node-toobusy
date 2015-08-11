@@ -88,6 +88,25 @@ toobusy.maxLag = function(newLag){
 };
 
 /**
+ * Set or get the smoothing factor. Default is 0.3333....
+ *
+ * The smoothing factor per the standard exponential smoothing formula "αtn + (1-α)tn-1"
+ * See: https://en.wikipedia.org/wiki/Exponential_smoothing
+ *
+ * @param  {Number} [newFactor] New smoothing factor.
+ * @return {Number}             New or existing smoothing factor.
+ */
+toobusy.smoothingFactor = function(newFactor){
+  if(!newFactor) return smoothingFactor;
+
+  if (typeof newFactor !== "number") throw new Error("NewFactor must be a number.");
+  if(newFactor <= 0 || newFactor > 1) throw new Error("Smoothing factor should be in range ]0,1].");
+
+  smoothingFactor = newFactor;
+  return smoothingFactor;
+};
+
+/**
  * Shuts down toobusy.
  *
  * Not necessary to call this manually, only do this if you know what you're doing. `unref()` is called
