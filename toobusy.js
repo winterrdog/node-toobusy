@@ -9,7 +9,8 @@ var STANDARD_INTERVAL = 500;
 // A dampening factor.  When determining average calls per second or
 // current lag, we weigh the current value against the previous value 2:1
 // to smooth spikes.
-var AVG_DECAY_FACTOR = 3;
+// See https://en.wikipedia.org/wiki/Exponential_smoothing
+var SMOOTHING_FACTOR = 1/3;
 
 //
 // Vars
@@ -18,6 +19,7 @@ var AVG_DECAY_FACTOR = 3;
 var lastTime = Date.now();
 var highWater = STANDARD_HIGHWATER;
 var interval = STANDARD_INTERVAL;
+var smoothingFactor = SMOOTHING_FACTOR;
 var currentLag = 0;
 var checkInterval;
 
@@ -108,8 +110,8 @@ function start() {
     var now = Date.now();
     var lag = now - lastTime;
     lag = Math.max(0, lag - interval);
-    // Dampen lag. See AVG_DECAY_FACTOR initialization at the top of this file.
-    currentLag = (lag + (currentLag * (AVG_DECAY_FACTOR - 1))) / AVG_DECAY_FACTOR;
+    // Dampen lag. See SMOOTHING_FACTOR initialization at the top of this file.
+    currentLag = smoothingFactor * lag + (1 - smoothingFactor) * currentLag;
     lastTime = now;
   }, interval);
 
