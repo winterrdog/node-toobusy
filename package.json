@@ -10,26 +10,10 @@
     "should": "1.2.1"
   },
   "maintainers": [
-    {
-      "name": "Samuel Reed",
-      "email": "sam@tixelated.com"
-    }
+    "Samuel Reed <sam@tixelated.com>"
   ],
-  "bugs": {
-    "url": "https://github.com/STRML/node-toobusy/issues"
-  },
-  "licenses": [
-    {
-      "type": "WTFPL"
-    }
-  ],
-  "repository": [
-    {
-      "type": "git",
-      "url": "git://github.com/STRML/node-toobusy.git"
-    }
-  ],
-  "main": "./index.js",
+  "license": "WTFPL",
+  "repository": "STRML/node-toobusy",
   "engines": {
     "node": ">=0.9.1"
   },
