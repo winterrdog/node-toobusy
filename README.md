@@ -71,9 +71,11 @@ process.on('SIGINT', function() {
 
 ## tunable parameters
 
-The one knob that the library exposes is "maximum lag".
-This number represents the maximum amount of time in milliseconds that the event queue is behind,
+The library exposes a few knobs:
+
+`maxLag` - This number represents the maximum amount of time in milliseconds that the event queue is behind,
 before we consider the process *too busy*.
+`interval` - The check interval for measuring event loop lag, in ms.
 
 ```javascript
 var toobusy = require('toobusy-js');
@@ -87,6 +89,10 @@ toobusy.interval(250);
 
 // Get current maxLag or interval setting by calling without parameters.
 var currentMaxLag = toobusy.maxLag(), interval = toobusy.interval();
+
+toobusy.onLag(function(currentLag) {
+  console.log("Event loop lag detected! Latency: " + currentLag + "ms");
+});
 ```
 
 The default maxLag value is 70ms, and the default check interval is 500ms.
@@ -99,6 +105,11 @@ These numbers are only examples,
 and the specifics of your hardware and application can change them drastically,
 so experiment!
 The default of 70 should get you started.
+
+## Events
+
+As of `0.5.0`, `toobusy-js` exposes an `onLag` method. Pass it a callback to be notified when
+a slow event loop tick has been detected.
 
 ## references
 
