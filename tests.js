@@ -96,7 +96,7 @@ describe('toobusy()', function() {
     it('should emit lag events if the lag is greater than the configured threshold',
         testLagEvent(50, 100, true));
     it('should emit lag events if lag occurs and no threshold is specified',
-        testLagEvent(undefined, 100, true));
+        testLagEvent(undefined, 500, true));
 
     function testLagEvent(threshold, work, expectFire) {
       return function (done) {
