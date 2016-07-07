@@ -129,14 +129,14 @@ toobusy.started = function() {
  * Registers an event listener for lag events,
  * optionally specify a minimum value threshold for events being emitted
  * @param {Function}  fn  Function of form onLag(value: number) => void
- * @param {number=0}  threshold Optional minimum lag value for events to be emitted
+ * @param {number}  [threshold=maxLag] Optional minimum lag value for events to be emitted
  */
 toobusy.onLag = function (fn, threshold) {
 
   if (typeof threshold === "number") {
     lagEventThreshold = threshold;
   } else {
-    lagEventThreshold = 0;
+    lagEventThreshold = toobusy.maxLag();
   }
 
   eventEmitter.on(LAG_EVENT, fn);
