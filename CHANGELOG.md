@@ -1,3 +1,6 @@
+### 0.5.1
+  * Set `onLag` default threshould to `maxLag()`. Thanks @flentini
+
 ### 0.5.0
   * Add `toobusy.onLag()` for catching lag events. Thanks @mnahkies
 
