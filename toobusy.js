@@ -54,7 +54,7 @@ toobusy.interval = function(newInterval) {
   newInterval = Math.round(newInterval);
   if(newInterval < 16) throw new Error("Interval should be greater than 16ms.");
 
-  toobusy.shutdown();
+  currentLag = 0;
   interval = newInterval;
   start();
   return interval;
@@ -123,7 +123,7 @@ toobusy.shutdown = function(){
 };
 
 toobusy.started = function() {
-  return Boolean(checkInterval);
+  return Boolean(checkInterval != null);
 };
 
 /**
@@ -149,6 +149,7 @@ toobusy.onLag = function (fn, threshold) {
 function start() {
   lastTime = Date.now();
 
+  clearInterval(checkInterval);
   checkInterval = setInterval(function(){
     var now = Date.now();
     var lag = now - lastTime;
