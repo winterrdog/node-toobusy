@@ -119,6 +119,7 @@ toobusy.smoothingFactor = function(newFactor){
 toobusy.shutdown = function(){
   currentLag = 0;
   checkInterval = clearInterval(checkInterval);
+  eventEmitter.removeAllListeners(LAG_EVENT);
 };
 
 toobusy.started = function() {
