@@ -19,7 +19,7 @@ var SMOOTHING_FACTOR = 1/3;
 // Vars
 //
 
-var lastTime = Date.now();
+var lastTime;
 var highWater = STANDARD_HIGHWATER;
 var interval = STANDARD_INTERVAL;
 var smoothingFactor = SMOOTHING_FACTOR;
@@ -147,6 +147,8 @@ toobusy.onLag = function (fn, threshold) {
  * Private - starts checking lag.
  */
 function start() {
+  lastTime = Date.now();
+
   checkInterval = setInterval(function(){
     var now = Date.now();
     var lag = now - lastTime;
