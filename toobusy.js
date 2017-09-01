@@ -123,7 +123,7 @@ toobusy.shutdown = function(){
 };
 
 toobusy.started = function() {
-  return !!checkInterval;
+  return Boolean(checkInterval);
 };
 
 /**
