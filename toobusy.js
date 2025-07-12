@@ -1,43 +1,45 @@
-'use strict';
+// @ts-check
+"use strict";
 
-var events = require('events');
+let events = require("node:events");
 
 //
 // Constants
 //
-var STANDARD_HIGHWATER = 70;
-var STANDARD_INTERVAL = 500;
-var LAG_EVENT = "LAG_EVENT";
+const STANDARD_HIGHWATER = 70;
+const STANDARD_INTERVAL = 500;
+const LAG_EVENT = "LAG_EVENT";
 
 // A dampening factor.  When determining average calls per second or
 // current lag, we weigh the current value against the previous value 2:1
 // to smooth spikes.
 // See https://en.wikipedia.org/wiki/Exponential_smoothing
-var SMOOTHING_FACTOR = 1/3;
+const SMOOTHING_FACTOR = 1 / 3;
 
 //
 // Vars
 //
 
-var lastTime;
-var highWater = STANDARD_HIGHWATER;
-var interval = STANDARD_INTERVAL;
-var smoothingFactor = SMOOTHING_FACTOR;
-var currentLag = 0;
-var checkInterval;
-var lagEventThreshold = -1;
-var eventEmitter = new events.EventEmitter();
+let lastTime,
+  highWater = STANDARD_HIGHWATER,
+  interval = STANDARD_INTERVAL,
+  smoothingFactor = SMOOTHING_FACTOR,
+  currentLag = 0,
+  checkInterval,
+  lagEventThreshold = -1,
+  eventEmitter = new events.EventEmitter();
 
 /**
  * Main export function.
  * @return {Boolean} True if node process is too busy.
  */
-var toobusy = function(){
+var toobusy = function () {
   // If current lag is < 2x the highwater mark, we don't always call it 'too busy'. E.g. with a 50ms lag
   // and a 40ms highWater (1.25x highWater), 25% of the time we will block. With 80ms lag and a 40ms highWater,
   // we will always block.
-  var pctToBlock = (currentLag - highWater) / highWater;
-  return Math.random() < pctToBlock;
+  let highWaterLagRatio =
+    currentLag > highWater ? (currentLag - highWater) / highWater : 0;
+  return Math.random() < highWaterLagRatio;
 };
 
 /**
@@ -47,12 +49,14 @@ var toobusy = function(){
  * @param  {Number} [newInterval] New interval to set. If not provided, will return the existing interval.
  * @return {Number}               New or existing interval.
  */
-toobusy.interval = function(newInterval) {
+toobusy.interval = function (newInterval) {
   if (!newInterval) return interval;
-  if (typeof newInterval !== "number") throw new Error("Interval must be a number.");
+  if (typeof newInterval !== "number")
+    throw new Error("Interval must be a number.");
 
   newInterval = Math.round(newInterval);
-  if(newInterval < 16) throw new Error("Interval should be greater than 16ms.");
+  if (newInterval < 16)
+    throw new Error("Interval should be greater than 16ms.");
 
   currentLag = 0;
   interval = newInterval;
@@ -64,7 +68,7 @@ toobusy.interval = function(newInterval) {
  * Returns last lag reading from last check interval.
  * @return {Number} Lag in ms.
  */
-toobusy.lag = function(){
+toobusy.lag = function () {
   return Math.round(currentLag);
 };
 
@@ -79,13 +83,13 @@ toobusy.lag = function(){
  * @param  {Number} [newLag] New maxLag (highwater) threshold.
  * @return {Number}          New or existing maxLag (highwater) threshold.
  */
-toobusy.maxLag = function(newLag){
-  if(!newLag) return highWater;
+toobusy.maxLag = function (newLag) {
+  if (!newLag) return highWater;
 
   // If an arg was passed, try to set highWater.
   if (typeof newLag !== "number") throw new Error("MaxLag must be a number.");
   newLag = Math.round(newLag);
-  if(newLag < 10) throw new Error("Maximum lag should be greater than 10ms.");
+  if (newLag < 10) throw new Error("Maximum lag should be greater than 10ms.");
 
   highWater = newLag;
   return highWater;
@@ -100,11 +104,12 @@ toobusy.maxLag = function(newLag){
  * @param  {Number} [newFactor] New smoothing factor.
  * @return {Number}             New or existing smoothing factor.
  */
-toobusy.smoothingFactor = function(newFactor){
-  if(!newFactor) return smoothingFactor;
-
-  if (typeof newFactor !== "number") throw new Error("NewFactor must be a number.");
-  if(newFactor <= 0 || newFactor > 1) throw new Error("Smoothing factor should be in range ]0,1].");
+toobusy.smoothingFactor = function (newFactor) {
+  if (!newFactor) return smoothingFactor;
+  if (typeof newFactor !== "number")
+    throw new Error("NewFactor must be a number.");
+  if (newFactor <= 0 || newFactor > 1)
+    throw new Error("Smoothing factor should be in range ]0,1].");
 
   smoothingFactor = newFactor;
   return smoothingFactor;
@@ -116,57 +121,75 @@ toobusy.smoothingFactor = function(newFactor){
  * Not necessary to call this manually, only do this if you know what you're doing. `unref()` is called
  * on toobusy's check interval, so it will never keep the server open.
  */
-toobusy.shutdown = function(){
+toobusy.shutdown = function () {
   currentLag = 0;
   checkInterval = clearInterval(checkInterval);
   eventEmitter.removeAllListeners(LAG_EVENT);
 };
 
-toobusy.started = function() {
+toobusy.started = function () {
   return Boolean(checkInterval != null);
 };
 
 /**
  * Registers an event listener for lag events,
  * optionally specify a minimum value threshold for events being emitted
- * @param {Function}  fn  Function of form onLag(value: number) => void
+ * @param {(value: number) => void}  fn  Function of form onLag(value: number) => void
  * @param {number}  [threshold=maxLag] Optional minimum lag value for events to be emitted
  */
 toobusy.onLag = function (fn, threshold) {
-
   if (typeof threshold === "number") {
     lagEventThreshold = threshold;
   } else {
     lagEventThreshold = toobusy.maxLag();
   }
-
   eventEmitter.on(LAG_EVENT, fn);
 };
 
 /**
- * Private - starts checking lag.
+ * Starts the lag monitoring process by initializing a timer that periodically checks for lag.
+ *
+ * The function sets up an interval that:
+ * 1. Calculates the lag between expected and actual execution times
+ * 2. Applies smoothing to the lag values to prevent sudden spikes from skewing the average
+ * 3. Updates the current lag using a weighted average
+ * 4. Emits a lag event if the lag exceeds the configured threshold
+ *
+ * The interval is set to not keep the process open by itself (using unref()).
+ *
+ * @private
+ * @fires module:toobusy#lag when lag exceeds the lagEventThreshold
  */
 function start() {
   lastTime = Date.now();
 
   clearInterval(checkInterval);
-  checkInterval = setInterval(function(){
-    var now = Date.now();
-    var lag = now - lastTime;
-    lag = Math.max(0, lag - interval);
-    
-     // Reverse the factor for lag decrement
-    var factor = lag < currentLag ? 1 - smoothingFactor : smoothingFactor;
+  checkInterval = setInterval(function () {
+    let now = Date.now();
+
+    let lag = now - lastTime;
+    if (lag > interval) lag -= interval;
+    else {
+      // we didn't take long enough to do the work, so reset lag
+      lag = 0;
+    }
+
+    let factor = smoothingFactor;
+    if (lag < currentLag) {
+      // we don't want sudden spikes to affect the average, so dampen
+      // the lag if it is less than the current lag. This is to
+      // prevent the lag from dropping too quickly.
+      factor = 1 - smoothingFactor;
+    }
 
     // Dampen lag. See SMOOTHING_FACTOR initialization at the top of this file.
-    // currentLag = smoothingFactor * lag + (1 - smoothingFactor) * currentLag;
-    currentLag = factor * Math.min(lag, highWater * 2) + (1 - factor) * currentLag;
+    currentLag =
+      factor * Math.min(lag, highWater * 2) + (1 - factor) * currentLag;
     lastTime = now;
 
     if (lagEventThreshold !== -1 && currentLag > lagEventThreshold) {
       eventEmitter.emit(LAG_EVENT, currentLag);
     }
-
   }, interval);
 
   // Don't keep process open just for this timer.
