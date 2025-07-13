@@ -158,6 +158,8 @@ describe("smoothingFactor", function () {
   beforeEach(function () {
     toobusy.maxLag(10);
     toobusy.interval(250);
+    toobusy.smoothingFactor(1 / 3); // Reset to default
+    // Add a small delay to ensure the interval has had time to reset
   });
   after(function () {
     toobusy.maxLag(70);
@@ -204,6 +206,7 @@ describe("smoothingFactor", function () {
   it("should respect larger dampening factors", function (done) {
     var cycles_to_toobusy = 0;
     toobusy.smoothingFactor(0.05);
+    toobusy.reset && toobusy.reset(); // Reset lag counter if the function exists
 
     function load() {
       if (toobusy()) {
