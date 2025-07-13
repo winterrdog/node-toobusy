@@ -2,7 +2,7 @@
 
 # Is Your Node Process Too Busy?
 
-`toobusy-js` is a fork of lloyd's [node-toobusy](http://github.com/lloyd/node-toobusy) that removes native dependencies in favor of using the `unref` introduced in [node 0.9.1](http://blog.nodejs.org/2012/08/28/node-v0-9-1-unstable/).
+`toobusy-js-v1` is a fork of lloyd's [node-toobusy](http://github.com/lloyd/node-toobusy) that removes native dependencies in favor of using the `unref` introduced in [node 0.9.1](http://blog.nodejs.org/2012/08/28/node-v0-9-1-unstable/).
 
 This fork was got from Samuel Reed's [node-toobusy](https://github.com/STRML/node-toobusy) repository, and is currently maintained by [winterrdog](https://github.com/winterrdog). I added some improvements to the lag calculation algorithm to be more robust under high load, and to allow for smoother performance degradation( inspired by this [PR](https://github.com/STRML/node-toobusy/pull/17)).
 
@@ -35,13 +35,13 @@ This allows your server to stay _responsive_ under extreme load, and continue se
 ## Installation
 
 ```
-npm install toobusy-js
+npm install toobusy-js-v1
 ```
 
 ## Usage
 
 ```javascript
-var toobusy = require("toobusy-js"),
+var toobusy = require("toobusy-js-v1"),
   express = require("express");
 
 var app = express();
@@ -80,7 +80,7 @@ The library exposes a few knobs:
 `interval` - The check interval for measuring event loop lag, in ms.
 
 ```javascript
-var toobusy = require("toobusy-js");
+var toobusy = require("toobusy-js-v1");
 
 // Set maximum lag to an aggressive value.
 toobusy.maxLag(10);
@@ -106,7 +106,7 @@ These numbers are only examples, and the specifics of your hardware and applicat
 
 ## Events
 
-As of `0.5.0`, `toobusy-js` exposes an `onLag` method. Pass it a callback to be notified when
+As of `0.5.0`, `toobusy-js-v1` exposes an `onLag` method. Pass it a callback to be notified when
 a slow event loop tick has been detected.
 
 ## References
