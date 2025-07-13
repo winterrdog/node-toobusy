@@ -2,7 +2,7 @@
   "name": "toobusy-js-v1",
   "description": "A lightweight module to prevent your Node.js server from becoming unresponsive under heavy load. Free of native dependencies.",
   "homepage": "https://github.com/winterrdog/node-toobusy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "devDependencies": {
     "mocha": "^11.7.1",
     "pre-commit": "^1.0.5",
