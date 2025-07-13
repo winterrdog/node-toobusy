@@ -1,3 +1,4 @@
 yarn.lock
 examples/
 tests.js
+package-lock.json
