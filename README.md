@@ -4,6 +4,8 @@
 
 `toobusy-js` is a fork of lloyd's [node-toobusy](http://github.com/lloyd/node-toobusy) that removes native dependencies in favor of using the `unref` introduced in [node 0.9.1](http://blog.nodejs.org/2012/08/28/node-v0-9-1-unstable/).
 
+This fork was got from Samuel Reed's [node-toobusy](https://github.com/STRML/node-toobusy) repository, and is currently maintained by [winterrdog](https://github.com/winterrdog). I added some improvements to the lag calculation algorithm to be more robust under high load, and to allow for smoother performance degradation( inspired by this [PR](https://github.com/STRML/node-toobusy/pull/17)).
+
 This package is a simpler install without native dependencies, but requires node >= 0.9.1.
 
 ## Node-Toobusy
